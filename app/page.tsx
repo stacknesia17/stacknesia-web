@@ -21,7 +21,7 @@ export default function Home() {
             </h1>
 
             <p className="text-[15px] text-gray-500 leading-relaxed mb-8 max-w-md">
-              Two senior DBAs sharing real-world knowledge from 100+ production databases — across finance, banking, telco, and logistics.
+              Two DBAs sharing real-world knowledge from 100+ production databases — across finance, banking, telco, and logistics.
             </p>
 
             <div className="flex items-center gap-3 mb-10">
