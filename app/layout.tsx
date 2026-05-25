@@ -13,8 +13,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: 'Stacknesia — Your Data Infrastructure, Architected.',
+  title: 'Stacknesia',
   description: 'Two DBAs sharing real-world knowledge from 100+ production databases. No fluff, no theory — just what actually works.',
+  icons: {
+    icon: '/icon.png',
 }
 
 export default function RootLayout({
