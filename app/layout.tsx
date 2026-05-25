@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Stacknesia — Your Data Infrastructure, Architected.',
+  title: 'Stacknesia',
   description: 'Two DBAs sharing real-world knowledge from 100+ production databases. No fluff, no theory — just what actually works.',
   icons: {
     icon: '/icon.png',
