@@ -40,7 +40,7 @@ export default function Blog() {
       <div className="max-w-6xl mx-auto px-6 py-10">
         <div className="grid grid-cols-3 gap-5">
           {articles.map((article, i) => (
-            <div key={i} className="bg-white border border-gray-200 rounded-xl overflow-hidden hover:border-red-200 transition-colors cursor-pointer">
+            <<a href={i === 0 ? '/blog/oracle-to-postgresql-migration' : '#'} key={i} className="bg-white border border-gray-200 rounded-xl overflow-hidden hover:border-red-200 transition-colors cursor-pointer">
               {/* Code thumbnail */}
               <div className="bg-gray-900 p-4 h-24 flex flex-col justify-center">
                 {article.code.map((line, j) => (
