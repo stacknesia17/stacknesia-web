@@ -1,12 +1,12 @@
 import Navbar from '../components/Navbar'
 
 const articles = [
-  { tag: 'PostgreSQL', tag2: 'HA', title: 'PostgreSQL HA with Patroni + HAProxy + PgBouncer: complete setup guide', excerpt: 'Step-by-step guide to building a production-grade PostgreSQL HA cluster with automated failover, connection pooling, and load balancing.', author: 'Yosef Jeffri', initials: 'YJ', date: 'May 2025', read: '12 min', code: ['# patronictl list', '+ Cluster: pg-prod', '  pg-01 | Leader | running', '  pg-02 | Replica| running'] },
-  { tag: 'Operations', tag2: 'Scale', title: 'Managing 100+ production PostgreSQL instances: patterns that scale', excerpt: 'Operational patterns, automation strategies, and lessons learned from managing over 100 PostgreSQL instances across multiple environments.', author: 'Patria Wineka', initials: 'PW', date: 'Apr 2025', read: '9 min', code: ['SELECT count(*), state', 'FROM pg_stat_activity', 'GROUP BY state;', '-- active: 147'] },
-  { tag: 'Migration', tag2: 'Oracle', title: 'Oracle to PostgreSQL: lessons from a 250GB banking database', excerpt: 'What we learned migrating a 250GB Oracle database to PostgreSQL — schema compatibility, data type mapping, and post-migration tuning.', author: 'Yosef Jeffri', initials: 'YJ', date: 'Mar 2025', read: '15 min', code: ['-- Pre-migration check', 'Schema: compatible ✓', 'Data types: mapped ✓', 'Stored procs: 12 found'] },
-  { tag: 'Monitoring', tag2: 'Grafana', title: 'Building a complete PostgreSQL observability stack with Grafana + Prometheus', excerpt: 'How to set up end-to-end database monitoring — from metrics collection to alerting — using open source tools that actually work in production.', author: 'Patria Wineka', initials: 'PW', date: 'Feb 2025', read: '11 min', code: ['# prometheus scrape', 'job: postgres_exporter', 'targets: [":9187"]', 'interval: 15s'] },
-  { tag: 'Performance', tag2: 'Tuning', title: 'PostgreSQL slow query analysis: from EXPLAIN to fix in production', excerpt: 'A practical walkthrough of identifying and fixing slow queries using EXPLAIN ANALYZE — with real examples from a high-traffic finance system.', author: 'Yosef Jeffri', initials: 'YJ', date: 'Jan 2025', read: '10 min', code: ['EXPLAIN ANALYZE', 'Seq Scan on orders', 'cost=0..89432.00', '→ Index Scan: 0.08ms'] },
-  { tag: 'Automation', tag2: 'Ansible', title: 'Automating PostgreSQL deployments with Ansible: a production playbook', excerpt: 'Stop deploying databases manually. This playbook covers installation, configuration, replication setup, and hardening — all automated.', author: 'Patria Wineka', initials: 'PW', date: 'Dec 2024', read: '13 min', code: ['- name: Install PG', '  hosts: db_servers', '  apt:', '    name: postgresql-15'] },
+  { slug: 'oracle-to-postgresql-migration', tag: 'Migration', tag2: 'Oracle', title: 'Oracle to PostgreSQL: lessons from a 250GB banking database', excerpt: 'What we learned migrating a 250GB Oracle database to PostgreSQL — schema compatibility, data type mapping, and post-migration tuning.', author: 'Yosef Jeffri', initials: 'YJ', date: 'Mar 2025', read: '15 min', code: ['-- Pre-migration check', 'Schema: compatible ✓', 'Data types: mapped ✓', 'Stored procs: 12 found'] },
+  { slug: null, tag: 'PostgreSQL', tag2: 'HA', title: 'PostgreSQL HA with Patroni + HAProxy + PgBouncer: complete setup guide', excerpt: 'Step-by-step guide to building a production-grade PostgreSQL HA cluster with automated failover, connection pooling, and load balancing.', author: 'Yosef Jeffri', initials: 'YJ', date: 'May 2025', read: '12 min', code: ['# patronictl list', '+ Cluster: pg-prod', '  pg-01 | Leader | running', '  pg-02 | Replica| running'] },
+  { slug: null, tag: 'Operations', tag2: 'Scale', title: 'Managing 100+ production PostgreSQL instances: patterns that scale', excerpt: 'Operational patterns, automation strategies, and lessons learned from managing over 100 PostgreSQL instances across multiple environments.', author: 'Patria Wineka', initials: 'PW', date: 'Apr 2025', read: '9 min', code: ['SELECT count(*), state', 'FROM pg_stat_activity', 'GROUP BY state;', '-- active: 147'] },
+  { slug: null, tag: 'Monitoring', tag2: 'Grafana', title: 'Building a complete PostgreSQL observability stack with Grafana + Prometheus', excerpt: 'How to set up end-to-end database monitoring — from metrics collection to alerting — using open source tools that actually work in production.', author: 'Patria Wineka', initials: 'PW', date: 'Feb 2025', read: '11 min', code: ['# prometheus scrape', 'job: postgres_exporter', 'targets: [":9187"]', 'interval: 15s'] },
+  { slug: null, tag: 'Performance', tag2: 'Tuning', title: 'PostgreSQL slow query analysis: from EXPLAIN to fix in production', excerpt: 'A practical walkthrough of identifying and fixing slow queries using EXPLAIN ANALYZE — with real examples from a high-traffic finance system.', author: 'Yosef Jeffri', initials: 'YJ', date: 'Jan 2025', read: '10 min', code: ['EXPLAIN ANALYZE', 'Seq Scan on orders', 'cost=0..89432.00', '→ Index Scan: 0.08ms'] },
+  { slug: null, tag: 'Automation', tag2: 'Ansible', title: 'Automating PostgreSQL deployments with Ansible: a production playbook', excerpt: 'Stop deploying databases manually. This playbook covers installation, configuration, replication setup, and hardening — all automated.', author: 'Patria Wineka', initials: 'PW', date: 'Dec 2024', read: '13 min', code: ['- name: Install PG', '  hosts: db_servers', '  apt:', '    name: postgresql-15'] },
 ]
 
 const filters = ['All', 'PostgreSQL', 'MySQL', 'MongoDB', 'High Availability', 'Migration', 'Monitoring', 'Automation', 'Performance']
@@ -40,7 +40,11 @@ export default function Blog() {
       <div className="max-w-6xl mx-auto px-6 py-10">
         <div className="grid grid-cols-3 gap-5">
           {articles.map((article, i) => (
-            <<a href={i === 0 ? '/blog/oracle-to-postgresql-migration' : '#'} key={i} className="bg-white border border-gray-200 rounded-xl overflow-hidden hover:border-red-200 transition-colors cursor-pointer">
+            <a
+              key={i}
+              href={article.slug ? `/blog/${article.slug}` : '#'}
+              className="bg-white border border-gray-200 rounded-xl overflow-hidden hover:border-red-200 transition-colors block"
+            >
               {/* Code thumbnail */}
               <div className="bg-gray-900 p-4 h-24 flex flex-col justify-center">
                 {article.code.map((line, j) => (
@@ -63,10 +67,12 @@ export default function Blog() {
                     <div className={`w-5 h-5 rounded-full flex items-center justify-center text-white text-[9px] font-medium ${article.initials === 'YJ' ? 'bg-red-600' : 'bg-red-800'}`}>{article.initials}</div>
                     <span className="text-[11px] text-gray-500">{article.author}</span>
                   </div>
-                  <span className="text-[11px] text-red-600 font-medium">Read more →</span>
+                  <span className="text-[11px] text-red-600 font-medium">
+                    {article.slug ? 'Read more →' : 'Coming soon'}
+                  </span>
                 </div>
               </div>
-            </div>
+            </a>
           ))}
         </div>
       </div>
