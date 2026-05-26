@@ -45,6 +45,7 @@ export default function ArticleOracleToPostgres() {
       {/* Article content */}
       <article className="px-6 max-w-3xl mx-auto pb-20">
 
+        {/* Intro */}
         <p className="text-[15px] text-gray-700 leading-relaxed mb-6">
           Last year, I was handed one of the more stressful migration projects of my career: move a 250GB Oracle database to PostgreSQL for a banking client, with minimal downtime and zero data loss. The database had been running Oracle for over a decade, with hundreds of stored procedures, custom data types, and Oracle-specific functions baked deep into the application layer.
         </p>
@@ -52,11 +53,13 @@ export default function ArticleOracleToPostgres() {
           This is the article I wish I had before starting. No sanitized success story — just what actually happened, what broke, and how we fixed it.
         </p>
 
+        {/* Section 1 */}
         <h2 className="text-xl font-medium text-gray-900 mb-4">Why they were migrating</h2>
         <p className="text-[15px] text-gray-700 leading-relaxed mb-6">
-          The client's Oracle license was up for renewal, and the cost was significant. PostgreSQL was the natural alternative — mature, enterprise-ready, and free. But cost wasn't the only driver. The team also wanted more control over their infrastructure and the ability to run on cloud-managed PostgreSQL without Oracle's licensing restrictions.
+          The client's Oracle license was up for renewal, and the cost was significant. PostgreSQL was the natural alternative — mature, enterprise-ready, and free. But cost wasn't the only driver. The team also wanted more control over their infrastructure and the ability to run on cloud-managed PostgreSQL (Aurora, Cloud SQL) without Oracle's licensing restrictions.
         </p>
 
+        {/* Callout box */}
         <div className="bg-red-50 border-l-4 border-red-600 rounded-r-xl p-5 mb-8">
           <p className="text-[13px] font-medium text-gray-900 mb-1">Key constraint</p>
           <p className="text-[14px] text-gray-600 leading-relaxed">
@@ -64,10 +67,12 @@ export default function ArticleOracleToPostgres() {
           </p>
         </div>
 
+        {/* Section 2 */}
         <h2 className="text-xl font-medium text-gray-900 mb-4">Pre-migration assessment</h2>
         <p className="text-[15px] text-gray-700 leading-relaxed mb-4">
           Before touching anything, we spent two weeks in assessment mode. This is the part most people skip — and where most migrations go wrong.
         </p>
+
         <p className="text-[15px] text-gray-700 leading-relaxed mb-3">Here's what we catalogued:</p>
         <ul className="mb-6 flex flex-col gap-2">
           {[
@@ -84,10 +89,12 @@ export default function ArticleOracleToPostgres() {
             </li>
           ))}
         </ul>
+
         <p className="text-[15px] text-gray-700 leading-relaxed mb-8">
           The database links were the biggest surprise. Nobody had documented them. We only found them by querying <code className="bg-gray-100 text-red-600 px-1.5 py-0.5 rounded text-[13px]">DBA_DB_LINKS</code> directly. Each one required a separate conversation with the application team about whether it was still in use.
         </p>
 
+        {/* Section 3 */}
         <h2 className="text-xl font-medium text-gray-900 mb-4">The toolchain: why we chose Pentaho</h2>
         <p className="text-[15px] text-gray-700 leading-relaxed mb-4">
           We evaluated three tools before settling on Pentaho Data Integration (PDI) for the data migration:
@@ -108,9 +115,10 @@ export default function ArticleOracleToPostgres() {
         </div>
 
         <p className="text-[15px] text-gray-700 leading-relaxed mb-8">
-          We ended up using <span className="font-medium text-gray-900">ora2pg</span> for schema conversion and <span className="font-medium text-gray-900">Pentaho</span> for data movement. They complement each other well — ora2pg handles the DDL translation, Pentaho handles the actual data transfer with transformation logic in between.
+          We ended up using <strong className="font-medium">ora2pg</strong> for schema conversion and <strong className="font-medium">Pentaho</strong> for data movement. They complement each other well — ora2pg handles the DDL translation, Pentaho handles the actual data transfer with transformation logic in between.
         </p>
 
+        {/* Code block */}
         <h2 className="text-xl font-medium text-gray-900 mb-4">Schema conversion with ora2pg</h2>
         <p className="text-[15px] text-gray-700 leading-relaxed mb-4">
           ora2pg produced a first-pass schema conversion, but it was never going to be production-ready out of the box. Here's a typical example of what it generated vs. what we actually needed:
@@ -151,6 +159,7 @@ export default function ArticleOracleToPostgres() {
 );`}</pre>
         </div>
 
+        {/* Section 4 */}
         <h2 className="text-xl font-medium text-gray-900 mb-4">The 3 biggest problems we hit</h2>
 
         <div className="flex flex-col gap-6 mb-8">
@@ -176,15 +185,9 @@ COALESCE(balance, 0)`}</pre>
               <span className="text-[11px] font-medium bg-red-600 text-white px-2 py-0.5 rounded">Problem 2</span>
               <span className="text-[14px] font-medium text-gray-900">Sequence gaps causing primary key conflicts</span>
             </div>
-            <p className="text-[13px] text-gray-600 leading-relaxed mb-3">
+            <p className="text-[13px] text-gray-600 leading-relaxed">
               Oracle sequences and PostgreSQL sequences behave differently under load. During our dry run, we hit primary key conflicts because the sequence start values weren't set correctly after data migration. Always query the max ID after migration and set your sequence accordingly.
             </p>
-            <div className="bg-gray-900 rounded-lg p-3">
-              <pre className="text-[11px] font-mono text-green-400">{`-- After migration, reset sequence to avoid conflicts
-SELECT setval('accounts_account_id_seq',
-  (SELECT MAX(account_id) FROM accounts) + 1
-);`}</pre>
-            </div>
           </div>
 
           <div className="border border-gray-200 rounded-xl p-5">
@@ -198,7 +201,8 @@ SELECT setval('accounts_account_id_seq',
           </div>
         </div>
 
-    <h2 className="text-xl font-medium text-gray-900 mb-4">The cutover weekend</h2>
+        {/* Cutover */}
+        <h2 className="text-xl font-medium text-gray-900 mb-4">The cutover weekend</h2>
         <p className="text-[15px] text-gray-700 leading-relaxed mb-4">
           We ran 3 dry runs before the actual cutover. Each one surfaced new issues. By the third run, we had the process down to 3h 42min — within our 4-hour window.
         </p>
@@ -222,6 +226,7 @@ SELECT setval('accounts_account_id_seq',
           </div>
         </div>
 
+        {/* Results */}
         <h2 className="text-xl font-medium text-gray-900 mb-4">Results after 30 days</h2>
         <div className="grid grid-cols-3 gap-4 mb-8">
           {[
@@ -235,6 +240,49 @@ SELECT setval('accounts_account_id_seq',
             </div>
           ))}
         </div>
-        
 
-        
+        {/* Lessons */}
+        <h2 className="text-xl font-medium text-gray-900 mb-4">What I'd do differently</h2>
+        <div className="flex flex-col gap-3 mb-10">
+          {[
+            'Start stored procedure conversion earlier — we underestimated this by 2 weeks',
+            'Run performance benchmarks before migration, not after — we got lucky with the +40% improvement',
+            'Document every database link before starting — hunting them mid-project is painful',
+            'Add a rollback timer to your runbook — if cutover hits 80% of your window, know when to abort',
+            'Test with production data volume in dry runs, not a sample — the CLOB issue only appeared at scale',
+          ].map((item, i) => (
+            <div key={i} className="flex items-start gap-3 bg-gray-50 border border-gray-100 rounded-lg p-4">
+              <span className="text-[12px] font-mono text-red-600 font-medium min-w-[20px]">{String(i + 1).padStart(2, '0')}</span>
+              <span className="text-[14px] text-gray-700">{item}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Author bio */}
+        <div className="border border-gray-200 rounded-xl p-6 flex items-start gap-4">
+          <div className="w-12 h-12 rounded-full bg-red-600 flex items-center justify-center text-white text-[14px] font-medium flex-shrink-0">YJ</div>
+          <div>
+            <div className="text-[14px] font-medium text-gray-900 mb-1">Yosef Jeffri Silvanus Nahak</div>
+            <div className="text-[12px] text-red-600 mb-2">Senior Database Engineer · Stacknesia</div>
+            <p className="text-[13px] text-gray-500 leading-relaxed">
+              4+ years managing polyglot database environments across finance, banking, telco, and logistics. Specializes in PostgreSQL HA, large-scale migrations, and multi-cloud database infrastructure.
+            </p>
+          </div>
+        </div>
+
+      </article>
+
+      {/* Footer */}
+      <footer className="bg-gray-900">
+        <div className="max-w-6xl mx-auto px-6 py-8 flex justify-between items-center flex-wrap gap-6">
+          <div>
+            <div className="text-[14px] font-medium text-white mb-1">Stacknesia</div>
+            <div className="text-[12px] text-gray-500">We've been in the trenches. Now we're sharing the map.</div>
+          </div>
+          <div className="text-[11px] text-gray-600">© 2025 Stacknesia · Jakarta, Indonesia</div>
+        </div>
+      </footer>
+
+    </main>
+  )
+}
